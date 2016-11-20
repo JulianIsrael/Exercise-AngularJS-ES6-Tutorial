@@ -13,6 +13,7 @@ var merge         = require('merge-stream');
 // Where our files are located
 var jsFiles   = "src/js/**/*.js";
 var viewFiles = "src/js/**/*.html";
+//TODO: add in modules css capabilities -> var cssFiles = "src/main.css"
 
 var interceptErrors = function(error) {
   var args = Array.prototype.slice.call(arguments);
@@ -28,7 +29,7 @@ var interceptErrors = function(error) {
 };
 
 
-gulp.task('browserify', ['views'], function() {
+gulp.task('browserify', ['views','css'], function() {
   return browserify('./src/js/app.js')
       .transform(babelify, {presets: ["es2015"]})
       .transform(ngAnnotate)
@@ -46,6 +47,12 @@ gulp.task('html', function() {
       .pipe(gulp.dest('./build/'));
 });
 
+gulp.task('css', function() {
+  return gulp.src("src/main.css")
+      .on('error', interceptErrors)
+      .pipe(gulp.dest('./build/'));
+});
+
 gulp.task('views', function() {
   return gulp.src(viewFiles)
       .pipe(templateCache({
@@ -58,7 +65,7 @@ gulp.task('views', function() {
 
 // This task is used for building production ready
 // minified JS/CSS files into the dist/ folder
-gulp.task('build', ['html', 'browserify'], function() {
+gulp.task('build', ['html', 'css', 'browserify'], function() {
   var html = gulp.src("build/index.html")
                  .pipe(gulp.dest('./dist/'));
 
@@ -66,7 +73,10 @@ gulp.task('build', ['html', 'browserify'], function() {
                .pipe(uglify())
                .pipe(gulp.dest('./dist/'));
 
-  return merge(html,js);
+  var css = gulp.src("build/main.css")
+                 .pipe(gulp.dest('./dist/'));
+
+  return merge(html,js,css);
 });
 
 gulp.task('default', ['html', 'browserify'], function() {
@@ -81,6 +91,7 @@ gulp.task('default', ['html', 'browserify'], function() {
   });
 
   gulp.watch("src/index.html", ['html']);
+  gulp.watch("src/main.css", ['css']);
   gulp.watch(viewFiles, ['views']);
   gulp.watch(jsFiles, ['browserify']);
 });

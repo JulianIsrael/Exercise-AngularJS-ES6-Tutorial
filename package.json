@@ -4,6 +4,10 @@
   "description": "Angular frontend for Conduit",
   "author": "Thinkster",
   "license": "MIT",
+  "scripts": {
+    "setup": "npm install -g gulp && npm install",
+    "start": "gulp"
+  },
   "dependencies": {
     "angular": "^1.5.0-rc.2",
     "angular-ui-router": "^0.2.17",

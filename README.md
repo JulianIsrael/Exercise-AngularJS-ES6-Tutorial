@@ -7,7 +7,5 @@ View the **[demo application](https://angularjs.realworld.io)** or **[learn how 
 # Getting started
 
 1. Clone repo
-2. `npm install`
-3. `gulp`
-
-Make sure you have gulp installed globally (`npm install -g gulp`)
+2. `npm run setup`
+3. `npm start`
